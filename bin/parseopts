@@ -1,0 +1,94 @@
+#!/usr/bin/env zsh
+# Parse command-line options in shell script
+# This script is a derived work of "parse_options.sh" from Kaldi project
+# ( http://kaldi.sourceforge.net/ )
+# located at (root)/egs/wsj/s5/utils/
+# which is released with Apache 2.0 license
+# Copyright 2012  Johns Hopkins University (Author: Daniel Povey);
+#                 Arnab Ghoshal, Karel Vesely
+
+# Parse command-line options.
+# Option format is: --option-name=arg or option-name=arg
+# and shell variable "option_name" gets set to value "arg"
+# The exceptions are --help|-h, which takes no arguments, but prints the
+# $hjzHelpMessage variable (if defined), and --config, which reads a config file as options
+
+__::errexit() {
+  printf "%s\n" "${hjzHelpMessage-}" >&2
+  printf '%.0s-' {1..75} >&2
+  printf '\n' >&2
+  echo "Error: $1" >&2
+  echo "Command line was:" >&2
+  echo "${hjzCommandLineOriginal-}" >&2
+  exit 5
+}
+
+# $1 should be in the form of --name=value or name=value
+__::parse_one_option() {
+  local key="${1%%=*}"
+  key="${key#--}"
+  key="${key//-/_}"
+  local value="${1#*=}"
+  value="${value//"'"/"'\"'\"'"}" # Escape single quote
+
+  if [[ "${(Pt)key-}" == "" ]]; then
+    __::errexit "Undeclared option: $1"
+  fi
+
+  if [[ "${(Pt)key-}" == "array" ]]; then
+    if [[ -z "$value" ]]; then
+      eval "$key=()"
+    else
+      eval "$key+=( '$value' )"
+    fi
+  elif [[ "${(Pt)key-}" == "scalar" ]]; then
+    eval "$key='$value'"
+  else
+    __::errexit "Invalid option type: $key is neither scalar nor array"
+  fi
+}
+
+__programargs=()
+typeset -g hjzCommandLineOriginal="$ZSH_ARGZERO $@"
+while true; do
+  if [[ "$#" == 0 ]]; then break; fi  # break if there are no arguments anymore
+  if [[ "$1" == "--" ]]; then # anything followed by -- is not parsed
+    shift 1
+    __programargs+=("$@")
+    break
+  fi
+
+  case "$1" in
+  # If the enclosing script is called with --help option, print the help
+  # message and exit.  Scripts should put help messages in $tris_help_message
+  --help|-h)
+    if [[ -z "${hjzHelpMessage-}" ]]; then
+      echo "No help found." >&2
+    else
+      printf "%s\n" "$hjzHelpMessage" >&2
+    fi
+    exit 0 ;;
+  --*=*)
+    __::parse_one_option "$1"
+    shift 1
+    ;;
+  *=*) # No -- prefix: this also works
+    __::parse_one_option "$1"
+    shift 1
+    ;;
+  --*)
+    __::parse_one_option "$1=true"
+    shift 1
+    ;;
+  *)
+    __programargs+=("$1")
+    shift 1
+    ;;
+  esac
+done
+set -- "${__programargs[@]+${__programargs[@]}}"
+
+unset __programargs
+unset -f __::parse_one_option
+unset -f __::errexit
+
