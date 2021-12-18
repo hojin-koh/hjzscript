@@ -14,6 +14,10 @@
 
 # Logging-related functions
 
+# Default options
+opt logfile '' "Log File"
+opt logrotate 3 "Number of old log files to keep"
+
 setupLog() {
   local fname="$1"
   local nRotate="$2"

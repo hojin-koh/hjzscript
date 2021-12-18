@@ -14,6 +14,7 @@
 
 # Message-related functions
 typeset -F SECONDS
+opt debug false "Whether to show debug messages on screen"
 
 outputMessage() {
   local typ="$1"
@@ -26,7 +27,7 @@ outputMessage() {
 }
 
 debug() {
-  if [[ -n "${DEBUG-}" ]]; then
+  if [[ "${debug-}" == true ]]; then
     printf "\033[0;34m[D-%06.1f] %s\033[m\n" "$SECONDS" "$1" >&2
   else
     printf "[D-%06.1f] %s" "$SECONDS" "$1" >&6

@@ -35,11 +35,7 @@ if [[ -z "${HJZ_ROOT_DIR-}" ]]; then
   export PATH="${HJZ_ROOT_DIR}/bin:$PATH"
 fi
 
+source "${0:a:h}/lib/flow.zsh"
+source "${0:a:h}/lib/opts.zsh"
 source "${0:a:h}/lib/msg.zsh"
 source "${0:a:h}/lib/logging.zsh"
-source "${0:a:h}/lib/flow.zsh"
-
-# Default options
-logfile=
-logrotate=3
-DEBUG=

@@ -14,7 +14,7 @@
 # $hjzHelpMessage variable (if defined), and --config, which reads a config file as options
 
 __::errexit() {
-  printf "%s\n" "${hjzHelpMessage-}" >&2
+  printf "%s" "$hjzHelpMessage" | column -tLs $'\t' >&2
   printf '%.0s-' {1..75} >&2
   printf '\n' >&2
   echo "Error: $1" >&2
@@ -65,7 +65,7 @@ while true; do
     if [[ -z "${hjzHelpMessage-}" ]]; then
       echo "No help found." >&2
     else
-      printf "%s\n" "$hjzHelpMessage" >&2
+      printf "%s" "$hjzHelpMessage" | column -tLs $'\t' >&2
     fi
     exit 0 ;;
   --*=*)

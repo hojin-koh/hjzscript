@@ -12,37 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Basic flow of a single script
+# Option-related functions
 
-HJZ_BEGIN_DATE="$(date +'%Y-%m-%d %H:%M:%S')"
-__HJZ::FLOW::prescript() {
-  if [[ -n "${logfile-}" ]]; then
-    setupLog "$logfile" "$logrotate"
+hjzHelpMessage="$desc"$'\n'$'\n'
+hjzOpts=()
+hjzRequiredArgs=()
+
+opt() {
+  local required=false
+  if [[ "${1-}" == "-r" ]]; then
+    required=true
+    shift
   fi
-
-  if [[ -n "${hjzCommandLineOriginal-}" ]]; then
-    info "Begin $hjzCommandLineOriginal"
+  local name="$1"
+  local nameVar="${name//-/_}"
+  local nameVar="${nameVar//./___}"
+  local value="$2"
+  local desc="$3"
+  hjzHelpMessage+="  [--]$name=$value"$'\t'"$desc"$'\n'
+  hjzOpts+=( "$nameVar" )
+  if [[ "$required" == true ]]; then
+    hjzRequiredArgs+=( "$nameVar" )
+  fi
+  if [[ "$value" == "("* ]]; then
+    declare -ga "$nameVar"
+    eval "$nameVar=$value"
   else
-    info "Begin $ZSH_ARGZERO $@"
-  fi
-  info "$HJZ_BEGIN_DATE (SHLVL=$SHLVL)"
-}
-
-run() {
-  __HJZ::FLOW::prescript "$@"
-  main "$@"
-}
-
-TRAPEXIT() {
-  local rtn=$?
-  if [[ "$rtn" == 0 ]]; then
-    info "End $ZSH_ARGZERO"
-  else
-    err "End with error ($rtn) $ZSH_ARGZERO"
+    declare -g "$nameVar"
+    eval "$nameVar='$value'"
   fi
 }
 
-TRAPINT() {
-  warn "Killed"
-  exit 130
-}
