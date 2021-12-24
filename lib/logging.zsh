@@ -44,6 +44,6 @@ rotateLog() {
       mv -f "$fname.$i.zst" "$fname.$[i+1].zst"
     fi
   done
-  zstd -17 -f -o "$fname.1.zst" --rm "$fname"
+  zstd -17 -f -o "$fname.1.zst" --rm "$fname" 2>/dev/null
 }
 

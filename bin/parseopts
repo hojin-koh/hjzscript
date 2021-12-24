@@ -65,8 +65,9 @@ while true; do
     if [[ -z "${hjzHelpMessage-}" ]]; then
       echo "No help found." >&2
     else
-      printf "%s" "$hjzHelpMessage" | column -tLs $'\t' >&2
+      printf "%s\n" "$hjzHelpMessage" | column -tLs $'\t' >&2
     fi
+    unset -f TRAPEXIT
     exit 0 ;;
   --*=*)
     __::parse_one_option "$1"

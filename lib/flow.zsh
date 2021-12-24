@@ -14,8 +14,41 @@
 
 # Basic flow of a single script
 
+addHook() {
+  local nameHook="$1"
+  local nameArray="HJZ_HOOK_$nameHook"
+  local nameFunc="$2"
+  shift; shift
+  if [[ -z "${1-}" ]]; then # Default behavior: append at the end
+    eval "$nameArray+=( '$nameFunc' )"
+  elif [[ "${1-}" == "begin" ]]; then
+    eval "$nameArray=( '$nameFunc' \"\${(@)$nameArray}\" )"
+  fi
+}
+
+invokeHook() {
+  local nameHook="$1"
+  shift
+  local nameArray="HJZ_HOOK_$nameHook"
+  if [[ "${(P@)#nameArray}" == 0 ]]; then
+    return
+  fi
+  debug "Invoke Hook: $nameHook"
+  for f in "${(P@)nameArray}"; do
+    debug "Start hook function $f"
+    "$f" "$@"
+  done
+  debug "End Hook: $nameHook"
+}
+
+HJZ_HOOK_preparse=()
+HJZ::FLOW::preparse() {
+  invokeHook preparse "$@"
+}
+
 HJZ_BEGIN_DATE="$(date +'%Y-%m-%d %H:%M:%S')"
-__HJZ::FLOW::prescript() {
+HJZ_HOOK_prescript=()
+HJZ::FLOW::prescript() {
   if [[ -n "${logfile-}" ]]; then
     setupLog "$logfile" "$logrotate"
   fi
@@ -26,15 +59,14 @@ __HJZ::FLOW::prescript() {
     info "Begin $ZSH_ARGZERO $@"
   fi
   info "$HJZ_BEGIN_DATE (SHLVL=$SHLVL)"
+
+  invokeHook prescript "$@"
 }
 
-run() {
-  __HJZ::FLOW::prescript "$@"
-  main "$@"
-}
-
+HJZ_HOOK_exit=()
 TRAPEXIT() {
   local rtn=$?
+  invokeHook exit "$rtn"
   if [[ "$rtn" == 0 ]]; then
     info "End $ZSH_ARGZERO"
   else

@@ -1,3 +1,4 @@
+#!/usr/bin/env zsh
 # Copyright 2020-2022, Hojin Koh
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,10 +33,25 @@ fi
 # Setup path for our executables
 if [[ -z "${HJZ_ROOT_DIR-}" ]]; then
   export HJZ_ROOT_DIR="${0:a:h}"
-  export PATH="${HJZ_ROOT_DIR}/bin:$PATH"
 fi
 
 source "${0:a:h}/lib/flow.zsh"
 source "${0:a:h}/lib/opts.zsh"
 source "${0:a:h}/lib/msg.zsh"
 source "${0:a:h}/lib/logging.zsh"
+
+opt checkneeded false "Check whether this script need to run (return true=need)"
+
+setupArgs
+HJZ::FLOW::preparse "$@"
+source "${0:a:h}/bin/parseopts"
+if [[ "$checkneeded" == "true" ]]; then
+  unset -f TRAPEXIT
+  if declare -f check >/dev/null; then
+    check
+  fi
+  exit 0
+else
+  HJZ::FLOW::prescript "$@"
+  main "$@"
+fi

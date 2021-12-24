@@ -43,3 +43,22 @@ opt() {
   fi
 }
 
+HJZ::HOOK::checkRequiredArgs() {
+  for var in "${(@)hjzRequiredArgs}"; do
+    if [[ -z "${(P)var-}" ]]; then
+      err "Required argument $var not specified" 1
+    fi
+  done
+}
+addHook prescript HJZ::HOOK::checkRequiredArgs
+
+HJZ::HOOK::logOptions() {
+  for var in "${(@)hjzOpts}"; do
+    if [[ "${(Pt)var-}" == "array" ]]; then
+      debug "option:$var=(${(P@)var-})"
+    else
+      debug "option:$var=${(P)var-}"
+    fi
+  done
+}
+addHook exit HJZ::HOOK::logOptions

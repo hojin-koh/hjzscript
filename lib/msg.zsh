@@ -16,7 +16,7 @@
 typeset -F SECONDS
 opt debug false "Whether to show debug messages on screen"
 
-outputMessage() {
+__::outputMessage() {
   local typ="$1"
   local color="$2"
   local msg="$3"
@@ -30,33 +30,33 @@ debug() {
   if [[ "${debug-}" == true ]]; then
     printf "\033[0;34m[D-%06.1f] %s\033[m\n" "$SECONDS" "$1" >&2
   else
-    printf "[D-%06.1f] %s" "$SECONDS" "$1" >&6
+    printf "[D-%06.1f] %s\n" "$SECONDS" "$1" >&6
   fi
 }
 
 info() {
-  outputMessage I '1;37' "$1"
+  __::outputMessage I '1;37' "$1"
 }
 
 warn() {
-  outputMessage W '1;33' "$1"
+  __::outputMessage W '1;33' "$1"
 }
 
 err() {
-  outputMessage E '1;31' "$1"
+  __::outputMessage E '1;31' "$1"
   if [[ "${2-}" -gt 0 ]]; then
     exit $2
   fi
 }
 
 prompt() {
-  outputMessage P '1;36' "$1: " ''
+  __::outputMessage P '1;36' "$1: " ''
   read -r REPLY || true
   printf "[%06.1f] REPLY=%s\n" "$SECONDS" "$REPLY" >&6
 }
 
 promptyn() {
-  outputMessage P '1;33' "$1 (y/n): " ''
+  __::outputMessage P '1;33' "$1 (y/n): " ''
   read -q REPLY || true
   echo >&5
   printf "[%06.1f] REPLY=%s\n" "$SECONDS" "$REPLY" >&6
