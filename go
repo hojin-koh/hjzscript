@@ -40,15 +40,17 @@ source "${0:a:h}/lib/opts.zsh"
 source "${0:a:h}/lib/msg.zsh"
 source "${0:a:h}/lib/logging.zsh"
 
-opt checkneeded false "Check whether this script need to run (return true=need)"
+opt chk false "Check whether this script need to run (return false=need)"
 
 setupArgs
 HJZ::FLOW::preparse "$@"
 source "${0:a:h}/bin/parseopts"
-if [[ "$checkneeded" == "true" ]]; then
+if [[ "$chk" == "true" ]]; then
   unset -f TRAPEXIT
   if declare -f check >/dev/null; then
     check
+  else
+    exit 1
   fi
   exit 0
 else
