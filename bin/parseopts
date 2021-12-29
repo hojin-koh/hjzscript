@@ -25,26 +25,26 @@ __::errexit() {
 
 # $1 should be in the form of --name=value or name=value
 __::parse_one_option() {
-  local key="${1%%=*}"
-  key="${key#--}"
-  key="${key//-/_}"
-  local value="${1#*=}"
-  value="${value//"'"/"'\"'\"'"}" # Escape single quote
+  local __key="${1%%=*}"
+  __key="${__key#--}"
+  __key="${__key//-/_}"
+  local __value="${1#*=}"
+  __value="${__value//"'"/"'\"'\"'"}" # Escape single quote
 
-  if [[ "${(Pt)key-}" == "" ]]; then
+  if [[ "${(Pt)__key-}" == "" ]]; then
     __::errexit "Undeclared option: $1"
   fi
 
-  if [[ "${(Pt)key-}" == "array" ]]; then
-    if [[ -z "$value" ]]; then
-      eval "$key=()"
+  if [[ "${(Pt)__key-}" == "array" ]]; then
+    if [[ -z "$__value" ]]; then
+      eval "$__key=()"
     else
-      eval "$key+=( '$value' )"
+      eval "$__key+=( '$__value' )"
     fi
-  elif [[ "${(Pt)key-}" == "scalar" ]]; then
-    eval "$key='$value'"
+  elif [[ "${(Pt)__key-}" == "scalar" ]]; then
+    eval "$__key='$__value'"
   else
-    __::errexit "Invalid option type: $key is neither scalar nor array"
+    __::errexit "Invalid option type: $__key is neither scalar nor array"
   fi
 }
 
