@@ -29,10 +29,12 @@ opt() {
   local nameVar="${nameVar//./___}"
   local value="$2"
   local desc="$3"
-  hjzHelpMessage+="  [--]$name=$value"$'\t'"$desc"$'\n'
   hjzOpts+=( "$nameVar" )
   if [[ "$required" == true ]]; then
+    hjzHelpMessage+="  $name=$value"$'\t'"$desc"$'\n'
     hjzRequiredArgs+=( "$nameVar" )
+  else
+    hjzHelpMessage+="  [--]$name=$value"$'\t'"$desc"$'\n'
   fi
   if [[ "$value" == "("* ]]; then
     declare -ga "$nameVar"
