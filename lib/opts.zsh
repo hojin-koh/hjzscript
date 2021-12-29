@@ -43,14 +43,13 @@ opt() {
   fi
 }
 
-HJZ::HOOK::checkRequiredArgs() {
+HJZ::FLOW::checkRequiredArgs() {
   for var in "${(@)hjzRequiredArgs}"; do
     if [[ -z "${(P)var-}" ]]; then
       err "Required argument $var not specified" 1
     fi
   done
 }
-addHook prescript HJZ::HOOK::checkRequiredArgs
 
 HJZ::HOOK::logOptions() {
   for var in "${(@)hjzOpts}"; do

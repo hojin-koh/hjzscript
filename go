@@ -45,15 +45,25 @@ opt chk false "Check whether this script need to run (return false=need)"
 setupArgs
 HJZ::FLOW::preparse "$@"
 source "${0:a:h}/bin/parseopts"
+
+HJZ::FLOW::checkRequiredArgs "$@"
+
+hjzNeedToRun=true
+if declare -f check >/dev/null; then
+  check && hjzNeedToRun=false || hjzNeedToRun=true
+fi
+
 if [[ "$chk" == "true" ]]; then
   unset -f TRAPEXIT
-  if declare -f check >/dev/null; then
-    check
-  else
+  if [[ "$hjzNeedToRun" == "true" ]]; then
     exit 1
   fi
   exit 0
 else
-  HJZ::FLOW::prescript "$@"
-  main "$@"
+  if [[ "$hjzNeedToRun" == "true" ]]; then
+    HJZ::FLOW::prescript "$@"
+    main "$@"
+  else
+    info "Check passed, no need to run $hjzCommandLineOriginal"
+  fi
 fi
