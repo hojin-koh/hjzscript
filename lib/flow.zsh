@@ -65,12 +65,12 @@ HJZ::FLOW::prescript() {
 
 HJZ_HOOK_exit=()
 TRAPEXIT() {
-  local rtn=$?
-  invokeHook exit "$rtn"
-  if [[ "$rtn" == 0 ]]; then
+  local __rtn=$?
+  invokeHook exit "$__rtn"
+  if [[ "$__rtn" == 0 ]]; then
     info "End $ZSH_ARGZERO"
   else
-    err "End with error ($rtn) $ZSH_ARGZERO"
+    err "End with error ($__rtn) $ZSH_ARGZERO"
   fi
 }
 

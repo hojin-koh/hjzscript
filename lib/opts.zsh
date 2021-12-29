@@ -19,46 +19,52 @@ hjzOpts=()
 hjzRequiredArgs=()
 
 opt() {
-  local required=false
+  local __required=false
   if [[ "${1-}" == "-r" ]]; then
-    required=true
+    __required=true
     shift
   fi
-  local name="$1"
-  local nameVar="${name//-/_}"
-  local nameVar="${nameVar//./___}"
-  local value="$2"
-  local desc="$3"
-  hjzOpts+=( "$nameVar" )
-  if [[ "$required" == true ]]; then
-    hjzHelpMessage+="  $name=$value"$'\t'"$desc"$'\n'
-    hjzRequiredArgs+=( "$nameVar" )
+  local __name="$1"
+  local __nameVar="${__name//-/_}"
+  local __nameVar="${__nameVar//./___}"
+  local __value="$2"
+  local __desc="$3"
+  hjzOpts+=( "$__nameVar" )
+  if [[ "$__required" == true ]]; then
+    hjzHelpMessage+="  $__name=$__value"$'\t'"$__desc"$'\n'
+    hjzRequiredArgs+=( "$__nameVar" )
   else
-    hjzHelpMessage+="  [--]$name=$value"$'\t'"$desc"$'\n'
+    hjzHelpMessage+="  [--]$__name=$__value"$'\t'"$__desc"$'\n'
   fi
-  if [[ "$value" == "("* ]]; then
-    declare -ga "$nameVar"
-    eval "$nameVar=$value"
+  if [[ "$__value" == "("* ]]; then
+    declare -ga "$__nameVar"
+    eval "$__nameVar=$__value"
   else
-    declare -g "$nameVar"
-    eval "$nameVar='$value'"
+    declare -g "$__nameVar"
+    eval "$__nameVar='$__value'"
   fi
 }
 
 HJZ::FLOW::checkRequiredArgs() {
-  for var in "${(@)hjzRequiredArgs}"; do
-    if [[ -z "${(P)var-}" ]]; then
-      err "Required argument $var not specified" 1
+  for __var in "${(@)hjzRequiredArgs}"; do
+    if [[ -z "${(P)__var-}" ]]; then
+      if [[ "${1+ok}" == "ok" ]]; then
+        eval "$__var='$1'"
+        info "Filled required argument \$$__var with positional argument '$1'"
+        shift
+      else
+        err "Required argument \$$__var not specified" 1
+      fi
     fi
   done
 }
 
 HJZ::HOOK::logOptions() {
-  for var in "${(@)hjzOpts}"; do
-    if [[ "${(Pt)var-}" == "array" ]]; then
-      debug "option:$var=(${(P@)var-})"
+  for __var in "${(@)hjzOpts}"; do
+    if [[ "${(Pt)__var-}" == "array" ]]; then
+      debug "option:$__var=(${(P@)__var-})"
     else
-      debug "option:$var=${(P)var-}"
+      debug "option:$__var=${(P)__var-}"
     fi
   done
 }
