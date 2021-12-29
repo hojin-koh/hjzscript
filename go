@@ -39,6 +39,7 @@ source "${0:a:h}/lib/flow.zsh"
 source "${0:a:h}/lib/opts.zsh"
 source "${0:a:h}/lib/msg.zsh"
 source "${0:a:h}/lib/logging.zsh"
+source "${0:a:h}/lib/fs.zsh"
 
 opt chk false "Check whether this script need to run (return false=need)"
 
