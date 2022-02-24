@@ -43,7 +43,9 @@ source "${0:a:h}/lib/fs.zsh"
 
 opt chk false "Check whether this script need to run (return false=need)"
 
-setupArgs
+if declare -f setupArgs >/dev/null; then
+  setupArgs
+fi
 HJZ::FLOW::preparse "$@"
 source "${0:a:h}/bin/parseopts"
 
