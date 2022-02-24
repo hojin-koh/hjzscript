@@ -14,7 +14,7 @@
 
 # Option-related functions
 
-hjzHelpMessage="$desc"$'\n'$'\n'
+hjzHelpMessage="${desc-}"$'\n'$'\n'
 hjzOpts=()
 hjzRequiredArgs=()
 
