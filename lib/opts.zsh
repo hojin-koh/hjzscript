@@ -18,6 +18,8 @@ hjzHelpMessage="${desc-}"$'\n'$'\n'
 hjzOpts=()
 hjzRequiredArgs=()
 
+# The utility to declare an option
+# Usage: opt [-r] <opt-name> <default-value> <description>
 opt() {
   local __required=false
   if [[ "${1-}" == "-r" ]]; then
