@@ -81,7 +81,7 @@ main() {
   info "opt-1 = $opt_1"
 }
 
-source "${0:a:h}/../../go"
+source "${0:a:h}/deps/hjzscript/go" # where this library is stored
 ```
 
-`./example.zsh` will give an error, but `./example.zsh --opt-1=5`, `./example.zsh opt-1=5`, or `./example.zsh 5` will assign 5 to `$opt_1`.
+`./scriptname.zsh` will give an error, but `./scriptname.zsh --opt-1=5`, `./scriptname.zsh opt-1=5`, or `./scriptname.zsh 5` will assign 5 to `$opt_1`.
