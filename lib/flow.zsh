@@ -14,6 +14,8 @@
 
 # Basic flow of a single script
 
+# The utility to hook a function
+# Usage: addHook <hook-name> <function-name> [begin]
 addHook() {
   local nameHook="$1"
   local nameArray="HJZ_HOOK_$nameHook"

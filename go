@@ -49,8 +49,8 @@ if declare -f setupArgs >/dev/null; then
 fi
 HJZ::FLOW::preparse "$@"
 source "${0:a:h}/bin/parseopts"
-
 HJZ::FLOW::checkRequiredArgs "$@"
+HJZ::FLOW::postparse "$@"
 
 hjzNeedToRun=true
 if declare -f check >/dev/null; then

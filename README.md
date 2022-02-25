@@ -34,7 +34,7 @@ The main added functionalities of this library are:
 - Opinionated colorful messages
 - Command-line parsing
 - Need-to-run check
-- Pre/post-script hooks
+- Pre-/post-script hooks
 - Temp directory management
 - Logging
 
@@ -94,3 +94,29 @@ You can optionally implement a `check()` function to indicate whether this scrip
 If there's no need to run the script, it will exit without actually running the main function, unless `--force` is specified on the command line.
 
 When a special option `--check` is specified, the script will return the return value of `check()` (or return 1 if there no such function) without running anything. `--force` has no effect here.
+
+### Pre-/Post-script Hooks
+
+The overall flow of the script looks like this:
+
+```
+setupArgs()
+
+"preparse" hooks
+option parsing
+check required arguments
+"postparse" hooks
+
+check()
+"prescript" hooks
+main()
+"exit" hooks
+```
+
+These mysterious hooks already contain several built-in functions, but users can add new things into them through the `addHook()` function. Usage: `addHook <hook-name> <function-name> [begin]`
+
+`<hook-name>` is basically the quoted string in the above flow.
+
+`<function-name>` is a zsh function.
+
+If the optional third parameter is "begin", the function will be inserted at the beginning of the hook sequence, instead of at the end (the default behaviour).
