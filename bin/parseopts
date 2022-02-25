@@ -28,6 +28,7 @@ __::parse_one_option() {
   local __key="${1%%=*}"
   __key="${__key#--}"
   __key="${__key//-/_}"
+  __key="${__key//./___}"
   local __value="${1#*=}"
   __value="${__value//"'"/"'\"'\"'"}" # Escape single quote
 
@@ -87,7 +88,9 @@ while true; do
     ;;
   esac
 done
-set -- "${__programargs[@]+${__programargs[@]}}"
+if [[ "${#__programargs[@]}" -gt 0 ]]; then
+  set -- "${__programargs[@]}"
+fi
 
 unset __programargs
 unset -f __::parse_one_option
