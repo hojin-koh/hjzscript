@@ -93,4 +93,4 @@ You can optionally implement a `check()` function to indicate whether this scrip
 
 If there's no need to run the script, it will exit without actually running the main function, unless `--force` is specified on the command line.
 
-When a special option `--chk` is specified, the script will return the return value of `check()` (or return 1 if there no such function) without running anything. `--force` has no effect here.
+When a special option `--check` is specified, the script will return the return value of `check()` (or return 1 if there no such function) without running anything. `--force` has no effect here.

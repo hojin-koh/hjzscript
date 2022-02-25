@@ -41,7 +41,7 @@ source "${0:a:h}/lib/msg.zsh"
 source "${0:a:h}/lib/logging.zsh"
 source "${0:a:h}/lib/fs.zsh"
 
-opt chk false "Check whether this script need to run (return false=need)"
+opt check false "Check whether this script need to run (return false=need)"
 opt force false "Always run the script even if there's no need"
 
 if declare -f setupArgs >/dev/null; then
@@ -57,7 +57,7 @@ if declare -f check >/dev/null; then
   check && hjzNeedToRun=false || hjzNeedToRun=true
 fi
 
-if [[ "$chk" == "true" ]]; then
+if [[ "$check" == "true" ]]; then
   unset -f TRAPEXIT
   if [[ "$hjzNeedToRun" == "true" ]]; then
     exit 1
