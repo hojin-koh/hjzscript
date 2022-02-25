@@ -8,9 +8,9 @@ setupArgs() {
 }
 
 main() {
-  info "opt-1 = $opt_1"
-  info "opt-2 = $opt_2"
-  info "opt.3 = $opt___3"
+  test "$opt_1" -eq 15
+  test "$opt_2" -eq 16
+  test "$opt___3" -eq 17
 }
 
 source "${0:a:h}/../../go"

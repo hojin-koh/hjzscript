@@ -54,9 +54,9 @@ HJZ::FLOW::prescript() {
   fi
 
   if [[ -n "${hjzCommandLineOriginal-}" ]]; then
-    info "Begin $hjzCommandLineOriginal"
+    info "> Begin $hjzCommandLineOriginal"
   else
-    info "Begin $ZSH_ARGZERO $@"
+    info "> Begin $ZSH_ARGZERO $@"
   fi
   info "$HJZ_BEGIN_DATE (SHLVL=$SHLVL)"
 
@@ -68,9 +68,9 @@ TRAPEXIT() {
   local __rtn=$?
   invokeHook exit "$__rtn"
   if [[ "$__rtn" == 0 ]]; then
-    info "End $ZSH_ARGZERO"
+    info "< End $ZSH_ARGZERO"
   else
-    err "End with error ($__rtn) $ZSH_ARGZERO"
+    err "< End with error ($__rtn) $ZSH_ARGZERO"
   fi
 }
 

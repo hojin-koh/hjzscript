@@ -42,6 +42,7 @@ source "${0:a:h}/lib/logging.zsh"
 source "${0:a:h}/lib/fs.zsh"
 
 opt chk false "Check whether this script need to run (return false=need)"
+opt force false "Always run the script even if there's no need"
 
 if declare -f setupArgs >/dev/null; then
   setupArgs
@@ -63,7 +64,7 @@ if [[ "$chk" == "true" ]]; then
   fi
   exit 0
 else
-  if [[ "$hjzNeedToRun" == "true" ]]; then
+  if [[ "$hjzNeedToRun" == "true" || "$force" == "true" ]]; then
     HJZ::FLOW::prescript "$@"
     main "$@"
   else

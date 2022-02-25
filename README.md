@@ -24,15 +24,16 @@ source "${0:a:h}/deps/hjzscript/go" # where this library is stored
 The output looks like this:
 
 ```
-[I-0000.0] Begin ./scriptname.zsh
+[I-0000.0] > Begin ./scriptname.zsh
 [I-0000.0] 2021-09-20 14:09:59 (SHLVL=5)
 The main script goes here
-[I-0000.0] End ./scriptname.zsh
+[I-0000.0] < End ./scriptname.zsh
 ```
 
 The main added functionalities of this library are:
 - Opinionated colorful messages
 - Command-line parsing
+- Need-to-run check
 - Pre/post-script hooks
 - Temp directory management
 - Logging
@@ -85,3 +86,11 @@ source "${0:a:h}/deps/hjzscript/go" # where this library is stored
 ```
 
 `./scriptname.zsh` will give an error, but `./scriptname.zsh --opt-1=5`, `./scriptname.zsh opt-1=5`, or `./scriptname.zsh 5` will assign 5 to `$opt_1`.
+
+### Need-to-run Check
+
+You can optionally implement a `check()` function to indicate whether this script really need to run. Returning 0 from this function means what it's designed to do is already done / in the desired state, and there's no need to run anything. Returning 1 from this function means it's not done yet, and there's need to run this script. If there's no such function, it's always assumed that there's need to run this script.
+
+If there's no need to run the script, it will exit without actually running the main function, unless `--force` is specified on the command line.
+
+When a special option `--chk` is specified, the script will return the return value of `check()` (or return 1 if there no such function) without running anything. `--force` has no effect here.
