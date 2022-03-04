@@ -120,3 +120,13 @@ These mysterious hooks already contain several built-in functions, but users can
 `<function-name>` is a zsh function.
 
 If the optional third parameter is "begin", the function will be inserted at the beginning of the hook sequence, instead of at the end (the default behaviour).
+
+### Temp Directory Management
+
+`putTemp <variable-name>` generates a temp directory and store the directory path into the desinated variable. At the end of the script (specifically, inside the "exit" hook) the temp directory will be cleaned up automatically.
+
+### Logging
+
+If built-in option `--logfile` was specified, log text will be written into this file, with automatic log-rotate mechanisms. Note that logging is set up inside the "prescript" phase, so the only proper way to modify this value would be from inside the "postparse" phase.
+
+By default, 3 old log files will be kept, which are named `logfile.1.zst`, `logfile.2.zst`, and `logfile.3.zst`. This value can be changed with `--logrotate` option.
