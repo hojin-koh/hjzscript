@@ -47,7 +47,7 @@ opt() {
   fi
 }
 
-HJZ::FLOW::checkRequiredArgs() {
+checkRequiredArgs() {
   for __var in "${(@)hjzRequiredArgs}"; do
     if [[ -z "${(P)__var-}" ]]; then
       if [[ "${1+ok}" == "ok" ]]; then
@@ -60,6 +60,7 @@ HJZ::FLOW::checkRequiredArgs() {
     fi
   done
 }
+addHook postparse checkRequiredArgs
 
 HJZ::HOOK::logOptions() {
   for __var in "${(@)hjzOpts}"; do
