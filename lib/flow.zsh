@@ -48,6 +48,11 @@ HJZ::FLOW::preparse() {
   invokeHook preparse "$@"
 }
 
+HJZ_HOOK_postparse=()
+HJZ::FLOW::postparse() {
+  invokeHook postparse "$@"
+}
+
 HJZ_BEGIN_DATE="$(date +'%Y-%m-%d %H:%M:%S')"
 HJZ_HOOK_prescript=()
 HJZ::FLOW::prescript() {

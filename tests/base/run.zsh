@@ -9,6 +9,7 @@ main() {
   ! ./02.check.sh --check false
   ./02.check.sh --force true
   ./02.check.sh false
+  ./03.hook.sh
 }
 
 source "${0:a:h}/../../go"
